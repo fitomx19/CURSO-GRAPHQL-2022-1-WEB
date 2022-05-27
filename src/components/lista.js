@@ -5,18 +5,34 @@ import axios from "axios";
 
 const Lista = () => {
   const [list, setList] = useState();
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    var url2 =
-      "http://localhost:4000/graphl?query=query%7B%0A%20%20mascotas%7B%0A%20%20%20%20_id%0A%20%20%20%20nombre%0A%20%20%20%20edad%0A%20%20%7D%0A%7D";
-    axios
-      .get(url2)
+    //url de nuestro servidor graphql
+    var url2 = "http://localhost:4000/graphl";
+    axios(url2, {
+      method: "post",
+      data: {
+        query: `
+                query{
+                    mascotas{
+                      _id
+                      nombre
+                      edad
+                      propietario
+                    }
+                  }
+                `,
+      },
+    })
       .then((result) => {
         let datos = result.data.data;
+        //agregamos lista al state
         setList(datos);
         console.log(datos);
       })
-      .catch((err) => console.log(err));
+      //manejo de errores
+      .catch((err) => console.log(err.message));
   }, [setList]);
 
   return (
@@ -29,10 +45,43 @@ const Lista = () => {
                 <li>
                   <div className="shadow-lg p-3 mb-5 text-white bg-success rounded py-2">
                     <p id={m._id}>
-                      <b>ID:</b> {m._id} | <b>Nombre:</b> {m.nombre} |{" "}
-                      <b>Edad:</b> {m.edad}
+                      <b>ID:</b> {m._id} | <b>Nombre:</b> {m.nombre} |
                     </p>
+                    <button
+                      className="btn btn-info"
+                      onClick={() => setVisible(true)}
+                    >
+                      Editar
+                    </button>
                   </div>
+                  {visible ? (
+                    <form
+                      action="http://localhost:4000/api/editar"
+                      method="POST"
+                    >
+                      <div className="form-group">
+                        <label>Nombre</label>
+                        <input type="hidden" name="id" value={m._id}></input>
+                        <input
+                          type="text"
+                          name="nombre"
+                          className="form-control"
+                        ></input>
+                        <label>Edad</label>
+                        <input
+                          type="number"
+                          name="edad"
+                          className="form-control"
+                        ></input>
+                        <div className="pt-2">
+                          <input
+                            type="submit"
+                            className="btn btn-outline-success"
+                          ></input>
+                        </div>
+                      </div>
+                    </form>
+                  ) : null}
                 </li>
               );
             })
