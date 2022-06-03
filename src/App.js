@@ -1,7 +1,11 @@
 import "./App.css";
 import Header from "../src/components/header";
 import Lista from "../src/components/lista";
+import React, { useState } from "react";
+import Agregar from "./components/Agregar";
+
 function App() {
+  const [visible, setVisible] = useState(false);
   return (
     <>
       <link
@@ -13,6 +17,12 @@ function App() {
       <div class="pt-2 text-center">
         <Header />
       </div>
+      <div>
+        {
+          !visible ? <button className="btn btn-primary"  onClick={() => setVisible(true)}> Agregar una Mascota</button> : null
+        }
+        {visible ? <><Agregar/></> : null}
+        </div>
       <div className="container">
         <Lista />
       </div>

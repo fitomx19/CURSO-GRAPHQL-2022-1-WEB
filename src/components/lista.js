@@ -45,7 +45,7 @@ const Lista = () => {
                 <li>
                   <div className="shadow-lg p-3 mb-5 text-white bg-success rounded py-2">
                     <p id={m._id}>
-                      <b>ID:</b> {m._id} | <b>Nombre:</b> {m.nombre} |
+                      <b>ID:</b> {m._id} | <b>Nombre:</b> {m.nombre} | {m.edad} años
                     </p>
                     <button
                       className="btn btn-info"
@@ -53,6 +53,14 @@ const Lista = () => {
                     >
                       Editar
                     </button>
+                    <div>
+                      <form action="http://localhost:4000/api/eliminar" method="POST">
+                          <input type="hidden" value={m._id} name="id"></input>
+                          <input type="submit" value="Eliminar" className="btn btn-danger">
+                            
+                          </input>
+                      </form>
+                    </div>
                   </div>
                   {visible ? (
                     <form
